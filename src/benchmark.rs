@@ -342,7 +342,7 @@ impl Display for Summary {
 }
 
 /// Summarize the metrics for a compression strategy.
-pub fn metrics_to_summary(metrics: &Vec<Result<Metrics>>) -> Summary {
+pub fn metrics_to_summary(metrics: &[Result<Metrics>]) -> Summary {
     if metrics.is_empty() {
         return Summary {
             total_games: 0,

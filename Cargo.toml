@@ -2,11 +2,17 @@
 name = "cgn-cli"
 version = "0.1.0"
 edition = "2021"
+authors = ["Jaden Strudwick"]
+description = "A command-line tool for optimally compressing chess games in PGN format."
+license = "MIT"
+repository = "https://github.com/JadenStrudwick/cgn-cli/"
+keywords = ["chess", "pgn", "compression", "wasm", "huffman"]
+categories = ["algorithms", "compression", "encoding", "games", "wasm"]
 
 [dependencies]
-anyhow = "1.0.75"
+anyhow = "1.0.79"
 bit-vec = "0.6.3"
 rand = "0.8.5"
-rayon = "1.8.0"
+rayon = "1.8.1"
 clap = { version = "4.5.0", features = ["derive"] }
-cgn = { path = "../cgn" }
+cgn = "0.1.3"

@@ -1,8 +1,26 @@
-#[cfg(not(tarpaulin_include))]
+//! # CGN-CLI (Compressed Game Notation Command Line Interface)
+
+//! CGN-CLI is a simple command line interface for the CGN (Compressed Game Notation) library I created. It allows you to compress and decompress PGN files using the CGN library. It is designed to be fast, efficient, and flexible. It supports WASM compilation via wasm-pack, and contains 4 different compression algorithms to choose from.
+
+//! ## Algorithms (High to Low Compression Ratios --- Low to High Speed)
+//! 1) `opening-huffman` - A Huffman encoding algorithm that uses the huffman-encoding crate to compress the PGN data, but with an additional optimization for compressing common opening moves.
+//! 2) `dynamic-huffman` - A Huffman encoding algorithm that uses the huffman-encoding crate to compress the PGN data, but with a huffman tree that is updated dynamically as the data is compressed.
+//! 3) `huffman` - A Huffman encoding algorithm that uses a huffman-encoding crate to compress the PGN data.
+//! 4) `bincode` - A simple binary encoding algorithm that uses the bincode crate to serialize the PGN data into a binary format.
+
+//! ## Installation
+//! ```bash
+//! cargo install cgn-cli
+//! ```
+
+//! ## Getting Started
+//! ```bash
+//! cgn-cli --help
+//! ```
+
 mod benchmark;
 use benchmark::{bench, ToTake};
 
-#[cfg(not(tarpaulin_include))]
 mod genetic_algorithm;
 use genetic_algorithm::{genetic_algorithm, GeneticAlgorithmConfig};
 
@@ -11,6 +29,9 @@ use cgn::compression::dynamic_huffman::{
     dynamic_huffman_compress_pgn_str, dynamic_huffman_decompress_pgn_str,
 };
 use cgn::compression::huffman::{huffman_compress_pgn_str, huffman_decompress_pgn_str};
+use cgn::compression::opening_huffman::{
+    opening_huffman_compress_pgn_str, opening_huffman_decompress_pgn_str,
+};
 use clap::{Parser, Subcommand};
 use std::fs::File;
 use std::io::{Read, Write};
@@ -28,7 +49,7 @@ struct Args {
 enum Commands {
     /// Compress a single PGN file
     Compress {
-        /// Optimization level (0-2)
+        /// Optimization level (0-3)
         #[clap(short, default_value = "2", value_parser = |s: &str| match s.parse::<u8>() {
             Ok(n) if n <= 2 => Ok(n),
             _ => Err(String::from("Optimization level must be between 0 and 2")),
@@ -45,9 +66,9 @@ enum Commands {
     },
     /// Decompress a single PGN file
     Decompress {
-        /// Optimization level (0-2)
+        /// Optimization level (0-3)
         #[clap(short, default_value = "2", value_parser = |s: &str| match s.parse::<u8>() {
-            Ok(n) if n <= 2 => Ok(n),
+            Ok(n) if n <= 3 => Ok(n),
             _ => Err(String::from("Optimization level must be between 0 and 2")),
         })]
         optimization_level: u8,
@@ -122,7 +143,6 @@ enum Commands {
     },
 }
 
-#[cfg(not(tarpaulin_include))]
 /// The main function for the command line interface.
 fn main() {
     let cli = Args::parse();
@@ -143,6 +163,7 @@ fn main() {
                 0 => bincode_compress_pgn_str(&pgn_str),
                 1 => huffman_compress_pgn_str(&pgn_str),
                 2 => dynamic_huffman_compress_pgn_str(&pgn_str),
+                3 => opening_huffman_compress_pgn_str(&pgn_str),
                 _ => unreachable!(),
             };
 
@@ -171,6 +192,7 @@ fn main() {
                 0 => bincode_decompress_pgn_str(&compressed_pgn_data),
                 1 => huffman_decompress_pgn_str(&compressed_pgn_data),
                 2 => dynamic_huffman_decompress_pgn_str(&compressed_pgn_data),
+                3 => opening_huffman_decompress_pgn_str(&compressed_pgn_data),
                 _ => unreachable!(),
             };
 
