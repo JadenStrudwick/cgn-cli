@@ -50,9 +50,9 @@ enum Commands {
     /// Compress a single PGN file
     Compress {
         /// Optimization level (0-3)
-        #[clap(short, default_value = "2", value_parser = |s: &str| match s.parse::<u8>() {
-            Ok(n) if n <= 2 => Ok(n),
-            _ => Err(String::from("Optimization level must be between 0 and 2")),
+        #[clap(short, default_value = "3", value_parser = |s: &str| match s.parse::<u8>() {
+            Ok(n) if n <= 3 => Ok(n),
+            _ => Err(String::from("Optimization level must be between 0 and 3")),
         })]
         optimization_level: u8,
 
@@ -67,9 +67,9 @@ enum Commands {
     /// Decompress a single PGN file
     Decompress {
         /// Optimization level (0-3)
-        #[clap(short, default_value = "2", value_parser = |s: &str| match s.parse::<u8>() {
+        #[clap(short, default_value = "3", value_parser = |s: &str| match s.parse::<u8>() {
             Ok(n) if n <= 3 => Ok(n),
-            _ => Err(String::from("Optimization level must be between 0 and 2")),
+            _ => Err(String::from("Optimization level must be between 0 and 3")),
         })]
         optimization_level: u8,
 
