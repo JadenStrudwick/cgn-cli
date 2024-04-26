@@ -9,6 +9,7 @@ CGN-CLI is a simple command line interface for the CGN (Compressed Game Notation
 4) `bincode` - A simple binary encoding algorithm that uses the bincode crate to serialize the PGN data into a binary format.
 
 ## Installation
+Ensure you have Rust installed on your system. Then run the following command:
 ```bash
 cargo install cgn-cli
 ```
