@@ -14,12 +14,12 @@ use std::{
 };
 
 /// An iterator over the games in a PGN database file.
-struct PgnDBIter<R: BufRead> {
+struct PgnDbIter<R: BufRead> {
     reader: R,
     buffer: String,
 }
 
-impl<R: BufRead> PgnDBIter<R> {
+impl<R: BufRead> PgnDbIter<R> {
     /// Creates a new PgnDBIter from a BufRead reader
     fn new(reader: R) -> Self {
         Self {
@@ -29,7 +29,7 @@ impl<R: BufRead> PgnDBIter<R> {
     }
 }
 
-impl<R: BufRead> Iterator for PgnDBIter<R> {
+impl<R: BufRead> Iterator for PgnDbIter<R> {
     // The type of the elements being iterated over.
     type Item = String;
 
@@ -67,10 +67,10 @@ impl<R: BufRead> Iterator for PgnDBIter<R> {
 }
 
 /// Opens a PGN database file and returns an iterator over the games in the database.
-fn pgn_db_into_iter(path: &str) -> Result<PgnDBIter<BufReader<File>>> {
+fn pgn_db_into_iter(path: &str) -> Result<PgnDbIter<BufReader<File>>> {
     let file = File::open(path)?;
     let reader = BufReader::new(file);
-    Ok(PgnDBIter::new(reader))
+    Ok(PgnDbIter::new(reader))
 }
 
 ///  Metrics for a compression strategy.
