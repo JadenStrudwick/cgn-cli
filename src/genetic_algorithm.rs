@@ -37,7 +37,7 @@ impl Display for GeneticAlgorithmConfig {
 #[derive(Debug, Clone)]
 struct Individual {
     height: f64,
-    dev: f64,
+    deviation: f64,
 }
 
 /// Runs a genetic algorithm to find the optimal height and dev values for the dynamic Huffman compression algorithm
@@ -62,7 +62,7 @@ pub fn genetic_algorithm(config: GeneticAlgorithmConfig) {
                 file.write_all(
                     format!(
                         "Generation: {}, Rank: {}, Height: {}, Dev: {}, Fitness: {}\n",
-                        gen_num, rank, individual.0.height, individual.0.dev, individual.1
+                        gen_num, rank, individual.0.height, individual.0.deviation, individual.1
                     )
                     .as_bytes(),
                 )
@@ -78,8 +78,8 @@ fn init_population(config: &GeneticAlgorithmConfig) -> Vec<(Individual, f64)> {
     let mut rng = thread_rng();
     for _ in 0..config.init_population {
         let height = rng.gen_range(config.height_min..=config.height_max);
-        let dev = rng.gen_range(config.dev_min..=config.dev_max);
-        population.push(Individual { height, dev });
+        let deviation = rng.gen_range(config.dev_min..=config.dev_max);
+        population.push(Individual { height, deviation });
     }
 
     // evaluate the fitness of each individual in the initial population
@@ -154,7 +154,7 @@ fn crossover(
     // create a child by averaging the height and dev values of the parents
     let mut child = Individual {
         height: (parent1.height + parent2.height) / 2.0,
-        dev: (parent1.dev + parent2.dev) / 2.0,
+        deviation: (parent1.deviation + parent2.deviation) / 2.0,
     };
 
     // randomly mutate the child by changing its height and dev values
@@ -163,7 +163,7 @@ fn crossover(
         child.height = rng.gen_range(config.height_min..=config.height_max);
     }
     if rng.gen_range(0.0..=1.0) < config.mutation_rate {
-        child.dev = rng.gen_range(config.dev_min..=config.dev_max);
+        child.deviation = rng.gen_range(config.dev_min..=config.dev_max);
     }
 
     child
@@ -177,7 +177,7 @@ fn fitness_function(config: &GeneticAlgorithmConfig, individual: &Individual) ->
         &config.input_db_path,
         &config.number_of_games,
         individual.height,
-        individual.dev,
+        individual.deviation,
     ))
     .avg_bits_per_move_excluding_headers
 }
