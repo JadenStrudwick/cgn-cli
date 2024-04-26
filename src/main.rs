@@ -9,6 +9,7 @@
 //! 4) `bincode` - A simple binary encoding algorithm that uses the bincode crate to serialize the PGN data into a binary format.
 
 //! ## Installation
+//! Ensure you have Rust installed on your system. Then run the following command:
 //! ```bash
 //! cargo install cgn-cli
 //! ```
@@ -37,7 +38,7 @@ use std::fs::File;
 use std::io::{Read, Write};
 
 #[derive(Parser)]
-#[clap(name = "cgn", version = "0.1.0", author = "Jaden S")]
+#[clap(name = "cgn-cli", version = "0.1.2", author = "Jaden S")]
 /// A command line interface for the cgn library
 struct Args {
     #[clap(subcommand)]
